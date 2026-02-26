@@ -1,0 +1,73 @@
+.movie-card-3d {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.movie-card-3d:hover {
+  transform: rotateY(8deg) rotateX(-8deg) translateZ(20px);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(var(--primary-rgb, 59, 130, 246), 0.2);
+}
+
+.movie-card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.movie-card-3d:hover .movie-card-inner {
+  transform: translateZ(30px);
+}
+
+/* Theme-aware colors for card backgrounds */
+[data-theme="dark"] .movie-card-3d {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.8), rgba(40, 40, 40, 0.8));
+}
+
+[data-theme="light"] .movie-card-3d {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(250, 250, 250, 0.9));
+}
+
+[data-theme="cyberpunk"] .movie-card-3d {
+  background: linear-gradient(135deg, rgba(20, 20, 30, 0.9), rgba(30, 10, 40, 0.9));
+}
+
+[data-theme="sunset"] .movie-card-3d {
+  background: linear-gradient(135deg, rgba(255, 100, 50, 0.1), rgba(255, 150, 80, 0.1));
+}
+
+[data-theme="forest"] .movie-card-3d {
+  background: linear-gradient(135deg, rgba(30, 60, 30, 0.1), rgba(60, 100, 40, 0.1));
+}
+
+[data-theme="ocean"] .movie-card-3d {
+  background: linear-gradient(135deg, rgba(30, 60, 100, 0.1), rgba(50, 120, 150, 0.1));
+}
+
+/* Responsive 3D effects for smaller screens */
+@media (max-width: 768px) {
+  .movie-card-3d:hover {
+    transform: rotateY(4deg) rotateX(-4deg) translateZ(10px);
+  }
+
+  .movie-card-3d:hover .movie-card-inner {
+    transform: translateZ(15px);
+  }
+}
+
+/* Animation for card appearance */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: rotateX(-20deg) translateZ(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0) translateZ(0);
+  }
+}
+
+.movie-card-3d {
+  animation: cardEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

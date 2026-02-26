@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+  <defs>
+    <linearGradient id="laugh_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e67e22;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="450" fill="url(#laugh_grad)"/>
+  <text x="150" y="180" font-size="36" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">THE</text>
+  <text x="150" y="230" font-size="48" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">LAUGHING</text>
+  <text x="150" y="270" font-size="48" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">MAN</text>
+  <rect x="30" y="300" width="240" height="100" fill="rgba(0,0,0,0.3)" rx="10"/>
+  <text x="150" y="325" font-size="13" fill="white" text-anchor="middle" font-family="Arial">A failed comedian becomes</text>
+  <text x="150" y="343" font-size="13" fill="white" text-anchor="middle" font-family="Arial">an unlikely viral sensation</text>
+  <text x="150" y="365" font-size="14" fill="white" text-anchor="middle" font-family="Arial" font-weight="bold">Now Showing</text>
+</svg>

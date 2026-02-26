@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account System Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .method {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .method:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .method.active {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .method h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .method p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .checklist {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .checklist h3 {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            color: #666;
+            font-size: 13px;
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 13px;
+            color: #155724;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            background: none;
+            color: #666;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            width: auto;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .icon {
+            font-size: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Account System Setup</h1>
+        <p class="subtitle">Choose your setup method and follow the steps below</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('setup')">Setup Methods</button>
+            <button class="tab-btn" onclick="switchTab('verify')">Verify Setup</button>
+            <button class="tab-btn" onclick="switchTab('next')">Next Steps</button>
+        </div>
+
+        <!-- Setup Tab -->
+        <div id="setup" class="tab-content active">
+            <!-- Method 1: Automated -->
+            <div class="method">
+                <h2><span class="icon">⚡</span> Method 1: Automated Setup (Recommended)</h2>
+                <p>The fastest way to set up your database. Requires Node.js installed.</p>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyToClipboard('npm run setup')">Copy</button>
+                    npm run setup
+                </div>
+
+                <p style="color: #999; font-size: 13px;">Or use the interactive wizard:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyToClipboard('npm run setup:wizard')">Copy</button>
+                    npm run setup:wizard
+                </div>
+
+                <div class="note">
+                    <strong>⚠️ Prerequisites:</strong> You need to add your Supabase Service Role Key to <code>.env.local</code>:
+                    <div style="margin-top: 8px; background: white; padding: 8px; border-radius: 4px;">
+                        <code>SUPABASE_SERVICE_ROLE_KEY=your_key_here</code>
+                    </div>
+                    Get it from Supabase Dashboard → Project Settings → API Keys → Service Role (secret)
+                </div>
+
+                <button onclick="runCommand('npm run setup')">Run Automated Setup</button>
+            </div>
+
+            <!-- Method 2: Interactive Wizard -->
+            <div class="method">
+                <h2><span class="icon">🔧</span> Method 2: Interactive Wizard</h2>
+                <p>Step-by-step guided setup with helpful prompts and fallbacks.</p>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyToClipboard('npm run setup:wizard')">Copy</button>
+                    npm run setup:wizard
+                </div>
+
+                <p style="color: #666; font-size: 13px; margin-top: 10px;">This will guide you through:</p>
+                <div class="checklist">
+                    <ul>
+                        <li>Database setup (automatic or manual)</li>
+                        <li>Header navigation integration</li>
+                        <li>Feature testing checklist</li>
+                    </ul>
+                </div>
+
+                <button onclick="runCommand('npm run setup:wizard')">Run Interactive Wizard</button>
+            </div>
+
+            <!-- Method 3: Manual -->
+            <div class="method">
+                <h2><span class="icon">📋</span> Method 3: Manual Dashboard Setup</h2>
+                <p>For maximum control, set up directly in Supabase Dashboard.</p>
+                
+                <ol style="color: #666; font-size: 13px; line-height: 1.8; margin-left: 20px;">
+                    <li>Go to <a href="https://app.supabase.com" target="_blank" style="color: #667eea;">Supabase Dashboard</a></li>
+                    <li>Open your project</li>
+                    <li>Click <strong>SQL Editor</strong></li>
+                    <li>Click <strong>New Query</strong></li>
+                    <li>Copy-paste the SQL (see below)</li>
+                    <li>Click <strong>Run</strong></li>
+                </ol>
+
+                <div class="note">
+                    <strong>📝 SQL Script:</strong> Use the SQL from <code>scripts/020_create_account_system.sql</code>
+                </div>
+
+                <button onclick="downloadSQL()">Download SQL File</button>
+                <button onclick="openSupabase()">Open Supabase Dashboard</button>
+            </div>
+        </div>
+
+        <!-- Verify Tab -->
+        <div id="verify" class="tab-content">
+            <h2 style="margin-bottom: 20px;">✅ Verify Your Setup</h2>
+
+            <p style="color: #666; margin-bottom: 15px;">Run this query in Supabase SQL Editor to verify all tables were created:</p>
+
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyToClipboard(getVerifySQL())">Copy</button>
+                <pre style="margin: 0;" id="verify-sql">SELECT table_name FROM information_schema.tables 
+WHERE table_schema = 'public' 
+AND (table_name LIKE 'user_%' 
+  OR table_name = 'promo_codes' 
+  OR table_name = 'loyalty_points_history' 
+  OR table_name = 'points_redemption' 
+  OR table_name = 'password_change_history')
+ORDER BY table_name;</pre>
+            </div>
+
+            <p style="color: #666; margin: 15px 0; font-size: 13px;">You should see all 12 tables:</p>
+
+            <div class="checklist">
+                <ul>
+                    <li>loyalty_points_history</li>
+                    <li>password_change_history</li>
+                    <li>points_redemption</li>
+                    <li>promo_codes</li>
+                    <li>user_loyalty_points</li>
+                    <li>user_payment_methods</li>
+                    <li>user_profiles</li>
+                    <li>user_promo_usage</li>
+                    <li>user_refunds</li>
+                    <li>user_saved_locations</li>
+                    <li>user_transactions</li>
+                    <li>user_wishlist</li>
+                </ul>
+            </div>
+
+            <div class="note" style="margin-top: 20px;">
+                <strong>⏱️ Time to verify:</strong> Run the query above in Supabase Dashboard. If you see all 12 tables, you're good to go! ✓
+            </div>
+        </div>
+
+        <!-- Next Steps Tab -->
+        <div id="next" class="tab-content">
+            <h2 style="margin-bottom: 20px;">🚀 Next Steps</h2>
+
+            <div class="method">
+                <h2><span class="icon">1️⃣</span> Start Development Server</h2>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyToClipboard('npm run dev')">Copy</button>
+                    npm run dev
+                </div>
+            </div>
+
+            <div class="method">
+                <h2><span class="icon">2️⃣</span> Test Your Account System</h2>
+                <p>Navigate to: <a href="http://localhost:3000/account" target="_blank" style="color: #667eea;">http://localhost:3000/account</a></p>
+                
+                <div class="checklist">
+                    <h3>Test these 8 features:</h3>
+                    <ul>
+                        <li><strong>Profile</strong> - Edit name, phone, bio, picture, date of birth</li>
+                        <li><strong>Saved Locations</strong> - Add home, work, or theatre addresses</li>
+                        <li><strong>Wishlist</strong> - Add/remove movies</li>
+                        <li><strong>Payment Methods</strong> - Save credit/debit cards</li>
+                        <li><strong>Transactions</strong> - View booking history</li>
+                        <li><strong>Offers & Promo Codes</strong> - Browse discount codes</li>
+                        <li><strong>Loyalty Points</strong> - View balance and redemption</li>
+                        <li><strong>Settings</strong> - Change password or delete account</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method">
+                <h2><span class="icon">3️⃣</span> Add Navigation Link (Optional)</h2>
+                <p>Open <code>components/header.tsx</code> and add:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyToClipboard(getHeaderLink())">Copy</button>
+                    <pre style="margin: 0;" id="header-link">&lt;Link href="/account" className="flex items-center gap-2"&gt;
+  &lt;User className="h-4 w-4" /&gt;
+  My Account
+&lt;/Link&gt;</pre>
+                </div>
+            </div>
+
+            <div class="method">
+                <h2><span class="icon">4️⃣</span> Optional Integrations</h2>
+                <p>Enhance your system with these features:</p>
+                <ul style="color: #666; font-size: 13px; line-height: 1.8; margin-left: 20px;">
+                    <li><strong>Auto-earn loyalty points</strong> on bookings (10% of booking amount)</li>
+                    <li><strong>Apply promo codes</strong> during checkout for discounts</li>
+                    <li><strong>Save theatre as favorite</strong> location after selection</li>
+                    <li><strong>Profile picture upload</strong> via Supabase Storage</li>
+                    <li><strong>Email notifications</strong> for account changes</li>
+                </ul>
+            </div>
+
+            <div class="note">
+                <strong>📚 Documentation:</strong> See <a href="../SETUP_ACCOUNT.md" target="_blank" style="color: #667eea;">SETUP_ACCOUNT.md</a> for detailed API reference and troubleshooting.
+            </div>
+        </div>
+
+        <div class="success" id="success-message">
+            ✅ <strong>Copied to clipboard!</strong> You can now paste it anywhere.
+        </div>
+
+        <div class="footer">
+            Set up your complete account system in minutes. Need help? See 
+            <a href="../SETUP_ACCOUNT.md" target="_blank">SETUP_ACCOUNT.md</a> or 
+            <a href="../ACCOUNT_SYSTEM_DOCUMENTATION.md" target="_blank">Documentation</a>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const msg = document.getElementById('success-message');
+                msg.classList.add('show');
+                setTimeout(() => msg.classList.remove('show'), 2000);
+            });
+        }
+
+        function getVerifySQL() {
+            return `SELECT table_name FROM information_schema.tables 
+WHERE table_schema = 'public' 
+AND (table_name LIKE 'user_%' 
+  OR table_name = 'promo_codes' 
+  OR table_name = 'loyalty_points_history' 
+  OR table_name = 'points_redemption' 
+  OR table_name = 'password_change_history')
+ORDER BY table_name;`;
+        }
+
+        function getHeaderLink() {
+            return `<Link href="/account" className="flex items-center gap-2">
+  <User className="h-4 w-4" />
+  My Account
+</Link>`;
+        }
+
+        function runCommand(cmd) {
+            copyToClipboard(cmd);
+            alert(`Copied: ${cmd}\n\nPaste this into your terminal and press Enter.`);
+        }
+
+        function downloadSQL() {
+            alert('Download: Copy the SQL from scripts/020_create_account_system.sql in your project');
+        }
+
+        function openSupabase() {
+            window.open('https://app.supabase.com', '_blank');
+        }
+
+        // Keyboard shortcut: Ctrl+K to open command palette
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                alert('Run: npm run setup\n\nQuickest way to set up your account system!');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+  <defs>
+    <linearGradient id="shadow_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2c3e50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#34495e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="450" fill="url(#shadow_grad)"/>
+  <text x="150" y="200" font-size="48" font-weight="bold" fill="#e74c3c" text-anchor="middle" font-family="Arial">SHADOW</text>
+  <text x="150" y="240" font-size="48" font-weight="bold" fill="#e74c3c" text-anchor="middle" font-family="Arial">PROTOCOL</text>
+  <rect x="30" y="280" width="240" height="120" fill="rgba(0,0,0,0.5)" rx="10"/>
+  <text x="150" y="310" font-size="14" fill="white" text-anchor="middle" font-family="Arial">A former operative pulled</text>
+  <text x="150" y="330" font-size="14" fill="white" text-anchor="middle" font-family="Arial">into a deadly mission</text>
+  <text x="150" y="350" font-size="14" fill="white" text-anchor="middle" font-family="Arial">Action Thriller • 128 min</text>
+  <text x="150" y="380" font-size="18" fill="white" text-anchor="middle" font-family="Arial" font-weight="bold">Now Showing</text>
+</svg>

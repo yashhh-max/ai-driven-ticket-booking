@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+  <defs>
+    <linearGradient id="echoes_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9b59b6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8e44ad;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="450" fill="url(#echoes_grad)"/>
+  <text x="150" y="160" font-size="32" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">ECHOES OF</text>
+  <text x="150" y="210" font-size="44" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">TOMORROW</text>
+  <rect x="30" y="280" width="240" height="120" fill="rgba(0,0,0,0.4)" rx="10"/>
+  <text x="150" y="310" font-size="14" fill="white" text-anchor="middle" font-family="Arial">A woman receives messages</text>
+  <text x="150" y="330" font-size="14" fill="white" text-anchor="middle" font-family="Arial">from her future self</text>
+  <text x="150" y="350" font-size="14" fill="white" text-anchor="middle" font-family="Arial">Thriller • 134 min</text>
+  <text x="150" y="380" font-size="14" fill="white" text-anchor="middle" font-family="Arial">Coming Feb 1</text>
+</svg>
