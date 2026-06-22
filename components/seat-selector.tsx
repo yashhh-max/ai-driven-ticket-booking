@@ -90,7 +90,7 @@ export function SeatSelector({
 
     setSeats(seatsWithStatus)
     setLoading(false)
-  }, [supabase, theaterId, showtimeId, userId, selectedSeats])
+  }, [supabase, theaterId, showtimeId, userId])
 
   useEffect(() => {
     fetchSeats()
@@ -122,8 +122,8 @@ export function SeatSelector({
       )
       .subscribe()
 
-    // Refresh every 10 seconds to handle lock expirations
-    const interval = setInterval(fetchSeats, 10000)
+    // Refresh every 30 seconds to handle lock expirations (reduced from 10s to prevent excessive polling)
+    const interval = setInterval(fetchSeats, 30000)
 
     return () => {
       supabase.removeChannel(channel)

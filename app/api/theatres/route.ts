@@ -1,8 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
+import { checkAndShiftShowtimes } from '@/lib/supabase/auto-shift-showtimes';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
+    // Prevent showtimes from expiring by shifting them forward automatically
+    await checkAndShiftShowtimes();
+
     const supabase = await createClient();
 
     const { searchParams } = new URL(req.url);

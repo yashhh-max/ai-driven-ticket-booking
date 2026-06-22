@@ -12,7 +12,7 @@ interface Movie3DCarouselProps {
   onSelectMovie: (index: number) => void
 }
 
-function MovieCarouselItem({ movie, index, total, selectedIndex }: any) {
+function MovieCarouselItem({ movie, index, total, selectedIndex, onSelect }: any) {
   const meshRef = useRef<THREE.Group>(null)
   const angle = (index / total) * Math.PI * 2
 
@@ -42,7 +42,12 @@ function MovieCarouselItem({ movie, index, total, selectedIndex }: any) {
   }
 
   return (
-    <group ref={meshRef} onClick={() => {}}>
+    <group 
+      ref={meshRef} 
+      onClick={onSelect}
+      onPointerOver={() => { document.body.style.cursor = 'pointer' }}
+      onPointerOut={() => { document.body.style.cursor = 'auto' }}
+    >
       {/* Movie card */}
       <Box args={[1.5, 2, 0.1]}>
         <meshStandardMaterial
@@ -73,7 +78,7 @@ function MovieCarouselItem({ movie, index, total, selectedIndex }: any) {
   )
 }
 
-export function Theater3DHomePage({ movies }: { movies: any[] }) {
+export function Theater3DHomePage({ movies, onSelectMovie }: { movies: any[], onSelectMovie: (index: number) => void }) {
   const groupRef = useRef<THREE.Group>(null)
   const selectedIndexRef = useRef(0)
 
@@ -102,6 +107,7 @@ export function Theater3DHomePage({ movies }: { movies: any[] }) {
           index={i}
           total={8}
           selectedIndex={selectedIndexRef.current}
+          onSelect={() => onSelectMovie(i)}
         />
       ))}
 
@@ -140,7 +146,7 @@ export function TheatreHomePage3D({ movies, onMovieSelect }: TheatreHomePageProp
     <div className="relative w-full h-screen bg-slate-950 overflow-hidden">
       <Canvas>
         <PerspectiveCamera makeDefault position={[0, 2, 15]} fov={60} />
-        <Theater3DHomePage movies={movies} />
+        <Theater3DHomePage movies={movies} onSelectMovie={handleSelect} />
         <color attach="background" args={['#0a0a0a']} />
       </Canvas>
 

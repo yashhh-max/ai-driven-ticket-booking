@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { checkAndShiftShowtimes } from '@/lib/supabase/auto-shift-showtimes'
 import { Header } from '@/components/header'
 import { ShowtimeCard } from '@/components/showtime-card'
 import { Movie, Showtime } from '@/lib/types'
@@ -14,6 +15,9 @@ interface MoviePageProps {
 }
 
 export default async function MoviePage({ params }: MoviePageProps) {
+  // Prevent showtimes from expiring by shifting them forward automatically
+  await checkAndShiftShowtimes()
+
   const { id } = await params
   const supabase = await createClient()
 

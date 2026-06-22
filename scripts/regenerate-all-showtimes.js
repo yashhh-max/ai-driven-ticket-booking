@@ -1,9 +1,15 @@
 const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config({ path: '.env.local' });
 
-const supabase = createClient(
-  'https://gyhabxcmtlueunljqzwo.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5aGFieGNtdGx1ZXVubGpxendvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk4NDQxMDYsImV4cCI6MjA4NTQyMDEwNn0.uApdeKtadRICSxN4W-jUfhNnEbYqF4G2AzohlMWuqOI'
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error('Missing env vars');
+  process.exit(1);
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function regenerateShowtimes() {
   try {
@@ -16,9 +22,18 @@ async function regenerateShowtimes() {
       .limit(10000);
     
     let deletedCount = 0;
-    for (const st of allST || []) {
-      await supabase.from('showtimes').delete().eq('id', st.id);
-      deletedCount++;
+    if (allST && allST.length > 0) {
+      const ids = allST.map(st => st.id);
+      const batchSize = 100;
+      for (let i = 0; i < ids.length; i += batchSize) {
+        const batchIds = ids.slice(i, i + batchSize);
+        const { error } = await supabase.from('showtimes').delete().in('id', batchIds);
+        if (error) {
+          console.warn(`⚠️ Error deleting batch: ${error.message}`);
+        } else {
+          deletedCount += batchIds.length;
+        }
+      }
     }
     
     console.log(`✓ Deleted ${deletedCount} showtimes\n`);

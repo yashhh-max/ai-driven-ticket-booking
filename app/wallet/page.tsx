@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { Wallet, Plus, ArrowUpRight, ArrowDownLeft, Clock, CreditCard, Loader2 } from 'lucide-react'
+import { Wallet, Plus, ArrowUpRight, ArrowDownLeft, Clock, CreditCard, Loader2, Gift } from 'lucide-react'
 import { format } from 'date-fns'
 import type { Wallet as WalletType, WalletTransaction } from '@/lib/types'
 import { toast } from '@/hooks/use-toast'
@@ -21,6 +21,8 @@ const QUICK_AMOUNTS = [100, 250, 500, 1000]
 export default function WalletPage() {
   const [wallet, setWallet] = useState<WalletType | null>(null)
   const [transactions, setTransactions] = useState<WalletTransaction[]>([])
+  const [loyaltyProfile, setLoyaltyProfile] = useState<any>(null)
+  const [loyaltyHistory, setLoyaltyHistory] = useState<any[]>([])
   const [customAmount, setCustomAmount] = useState('')
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
@@ -73,6 +75,18 @@ export default function WalletPage() {
         
         if (txns) {
           setTransactions(txns as WalletTransaction[])
+        }
+
+        // Fetch loyalty info
+        try {
+          const loyaltyRes = await fetch('/api/loyalty')
+          const loyaltyData = await loyaltyRes.json()
+          if (loyaltyData?.success) {
+            setLoyaltyProfile(loyaltyData.profile)
+            setLoyaltyHistory(loyaltyData.history)
+          }
+        } catch (loyErr) {
+          console.error('Error loading loyalty data:', loyErr)
         }
       }
       
@@ -212,7 +226,7 @@ export default function WalletPage() {
           </Card>
 
           {/* Add Money Card */}
-          <Card className="lg:col-span-2 border-border bg-card">
+          <Card className="lg:col-span-1 border-border bg-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-foreground">
                 <Plus className="h-5 w-5" />
@@ -226,7 +240,7 @@ export default function WalletPage() {
               {/* Quick amounts */}
               <div className="space-y-2">
                 <Label className="text-foreground">Quick Select</Label>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2">
                   {QUICK_AMOUNTS.map((amount) => (
                     <Button
                       key={amount}
@@ -235,7 +249,7 @@ export default function WalletPage() {
                         setSelectedAmount(amount)
                         setCustomAmount('')
                       }}
-                      className="min-w-[80px]"
+                      className="min-w-[65px] h-8 text-xs px-2"
                     >
                       {formatCurrency(amount)}
                     </Button>
@@ -245,8 +259,8 @@ export default function WalletPage() {
 
               {/* Custom amount */}
               <div className="space-y-2">
-                <Label htmlFor="custom-amount" className="text-foreground">Or Enter Custom Amount</Label>
-                <div className="flex gap-3">
+                <Label htmlFor="custom-amount" className="text-foreground">Custom Amount</Label>
+                <div className="flex flex-col sm:flex-row gap-3">
                   <div className="relative flex-1">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                     <Input
@@ -255,7 +269,7 @@ export default function WalletPage() {
                       min="1"
                       step="0.01"
                       placeholder="0.00"
-                      className="pl-7 bg-input text-foreground"
+                      className="pl-7 bg-input text-foreground h-9"
                       value={customAmount}
                       onChange={(e) => {
                         setCustomAmount(e.target.value)
@@ -266,18 +280,49 @@ export default function WalletPage() {
                   <Button 
                     onClick={handleAddMoney}
                     disabled={isPending || (!selectedAmount && !customAmount)}
-                    className="min-w-[140px]"
+                    className="min-w-[100px] h-9 text-xs"
                   >
                     {isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <>
                         <CreditCard className="mr-2 h-4 w-4" />
-                        Add Money
+                        Add
                       </>
                     )}
                   </Button>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Loyalty Rewards Card */}
+          <Card className="lg:col-span-1 border-cyan-500/30 bg-gradient-to-br from-slate-950 to-slate-900 shadow-md">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardDescription className="text-cyan-400 font-semibold flex items-center gap-1.5">
+                  <Gift className="h-4 w-4" />
+                  Loyalty Rewards
+                </CardDescription>
+                <Badge className="bg-cyan-500 text-black font-bold uppercase text-[10px] px-2 py-0.5">
+                  {loyaltyProfile?.tier || 'Bronze'}
+                </Badge>
+              </div>
+              <CardTitle className="flex items-baseline gap-1 mt-2">
+                <span className="text-4xl font-bold text-white">
+                  {loyaltyProfile?.available_points || 0}
+                </span>
+                <span className="text-xs text-muted-foreground font-normal">available points</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-2 rounded-lg bg-cyan-950/20 border border-cyan-500/20 p-2.5 text-xs text-cyan-200">
+                <Gift className="h-4 w-4 shrink-0 text-cyan-400" />
+                <span>Equivalent to {formatCurrency(Math.floor((loyaltyProfile?.available_points || 0) / 10))} discount</span>
+              </div>
+              <div className="text-[11px] text-muted-foreground flex justify-between pt-2 border-t border-gray-800">
+                <span>Lifetime Earned: {loyaltyProfile?.lifetime_points || 0} pts</span>
+                <span>Tier: {loyaltyProfile?.tier || 'Bronze'} Member</span>
               </div>
             </CardContent>
           </Card>

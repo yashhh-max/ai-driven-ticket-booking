@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Menu, Zap, Brain, Wallet, User } from 'lucide-react'
 import Link from 'next/link'
+import { TheatreHomePage3D } from '@/components/theatre-home-3d'
+import { ThemeSwitcher } from '@/components/theme-provider-3d'
 
 interface HomePageClientProps {
   movies: Movie[]
@@ -31,6 +33,7 @@ export function HomePageClient({ movies, isAuthenticated }: HomePageClientProps)
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
   const [selectedLocation, setSelectedLocation] = useState('all')
   const [autoBookOnly, setAutoBookOnly] = useState(false)
+  const [is3DMode, setIs3DMode] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -93,6 +96,16 @@ export function HomePageClient({ movies, isAuthenticated }: HomePageClientProps)
             <p className="text-muted-foreground text-sm">Your premiere movie booking platform</p>
           </div>
           <div className="flex gap-3 items-center">
+            {is3DMode && <ThemeSwitcher />}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setIs3DMode(!is3DMode)}
+              className="flex items-center gap-2 border-cyan-500/50 hover:bg-cyan-950/20 text-cyan-400 font-semibold"
+            >
+              <span>{is3DMode ? '📺 Classic View' : '✨ 3D Immersive'}</span>
+            </Button>
+
             {/* Hamburger Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -165,16 +178,42 @@ export function HomePageClient({ movies, isAuthenticated }: HomePageClientProps)
       {/* Hero Section */}
 
 
-      {/* Search & Location Filter */}
-      <section className="py-6 bg-black border-b">
-        <div className="container mx-auto px-4">
-          <SearchFilter onSearch={handleSearch} isLoading={searchLoading} />
-        </div>
-      </section>
+      {/* Search & Location Filter - only in 2D mode */}
+      {!is3DMode && !selectedMovie && (
+        <section className="py-6 bg-black border-b">
+          <div className="container mx-auto px-4">
+            <SearchFilter onSearch={handleSearch} isLoading={searchLoading} />
+          </div>
+        </section>
+      )}
 
-      {/* All Movies Grid */}
-      {!selectedMovie ? (
-        filteredMovies.length > 0 && (
+      {/* 3D Immersive Home Page Carousel */}
+      {is3DMode && !selectedMovie && (
+        <TheatreHomePage3D movies={filteredMovies} onMovieSelect={handleMovieClick} />
+      )}
+
+      {/* Movie Grid or Theatre List */}
+      {selectedMovie ? (
+        // Show theatres for selected movie and location
+        <section className="py-16">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <Button
+              variant="outline"
+              onClick={() => setSelectedMovie(null)}
+              className="mb-6"
+            >
+              ← Back to Movies
+            </Button>
+            <TheatreList
+              movieId={selectedMovie.id}
+              movieTitle={selectedMovie.title}
+              location={selectedLocation}
+            />
+          </div>
+        </section>
+      ) : (
+        // All Movies Grid - only in 2D mode
+        !is3DMode && filteredMovies.length > 0 && (
           <section className="py-16">
             <div className="container mx-auto px-4">
               <div className="mb-8 flex justify-between items-center">
@@ -217,24 +256,6 @@ export function HomePageClient({ movies, isAuthenticated }: HomePageClientProps)
             </div>
           </section>
         )
-      ) : (
-        // Show theatres for selected movie and location
-        <section className="py-16">
-          <div className="container mx-auto px-4 max-w-5xl">
-            <Button
-              variant="outline"
-              onClick={() => setSelectedMovie(null)}
-              className="mb-6"
-            >
-              ← Back to Movies
-            </Button>
-            <TheatreList
-              movieId={selectedMovie.id}
-              movieTitle={selectedMovie.title}
-              location={selectedLocation}
-            />
-          </div>
-        </section>
       )}
 
       {filteredMovies.length === 0 && !searchLoading && (

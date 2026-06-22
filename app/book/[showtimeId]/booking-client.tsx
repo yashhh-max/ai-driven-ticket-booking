@@ -5,6 +5,8 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { SeatSelector } from '@/components/seat-selector'
+import { SeatSelector3D } from '@/components/seat-selector-3d'
+import DynamicPricingDisplay from '@/components/dynamic-pricing-display'
 import { Showtime, Movie, Theater, SeatWithStatus } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,6 +26,7 @@ export function BookingClient({ showtime, userId }: BookingClientProps) {
   const [selectedSeats, setSelectedSeats] = useState<SeatWithStatus[]>([])
   const [totalAmount, setTotalAmount] = useState(0)
   const [isBooking, setIsBooking] = useState(false)
+  const [is3DView, setIs3DView] = useState(false)
   const supabase = createClient()
 
   const handleSelectionChange = useCallback((seats: SeatWithStatus[], total: number) => {
@@ -57,9 +60,10 @@ export function BookingClient({ showtime, userId }: BookingClientProps) {
       if (checkError) throw checkError
       
       if (existingBookings && existingBookings.length > 0) {
-        toast.error('One or more selected seats have been booked by another user. Please refresh and select different seats.')
-        // Refresh the seat status
-        window.location.reload()
+        toast.error('One or more selected seats have been booked by another user. Please select different seats.')
+        // Clear selections instead of reloading
+        setSelectedSeats([])
+        setTotalAmount(0)
         return
       }
 
@@ -100,9 +104,10 @@ export function BookingClient({ showtime, userId }: BookingClientProps) {
             .delete()
             .eq('id', booking.id)
           
-          toast.error('One or more selected seats have been booked by another user. Please refresh and select different seats.')
-          // Refresh the seat status
-          window.location.reload()
+          toast.error('One or more selected seats have been booked by another user. Please select different seats.')
+          // Clear selections instead of reloading
+          setSelectedSeats([])
+          setTotalAmount(0)
           return
         }
         throw seatsError
@@ -138,17 +143,38 @@ export function BookingClient({ showtime, userId }: BookingClientProps) {
     <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
       {/* Seat Selection Area */}
       <Card className="bg-card">
-        <CardHeader>
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <CardTitle>Select Your Seats</CardTitle>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIs3DView(!is3DView)}
+            className="border-cyan-500/50 hover:bg-cyan-950/20 text-cyan-400 font-semibold"
+          >
+            {is3DView ? '📺 2D Standard View' : '✨ 3D Immersive View'}
+          </Button>
         </CardHeader>
-        <CardContent>
-          <SeatSelector
-            showtimeId={showtime.id}
-            theaterId={showtime.theater_id}
-            userId={userId}
-            basePrice={showtime.price}
-            onSelectionChange={handleSelectionChange}
-          />
+        <CardContent className="space-y-6">
+          <div className="mb-4">
+            <DynamicPricingDisplay showtimeId={showtime.id} />
+          </div>
+          {is3DView ? (
+            <SeatSelector3D
+              showtimeId={showtime.id}
+              theaterId={showtime.theater_id}
+              userId={userId}
+              basePrice={showtime.price}
+              onSelectionChange={handleSelectionChange}
+            />
+          ) : (
+            <SeatSelector
+              showtimeId={showtime.id}
+              theaterId={showtime.theater_id}
+              userId={userId}
+              basePrice={showtime.price}
+              onSelectionChange={handleSelectionChange}
+            />
+          )}
         </CardContent>
       </Card>
 

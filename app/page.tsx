@@ -1,8 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
+import { checkAndShiftShowtimes } from '@/lib/supabase/auto-shift-showtimes'
 import { HomePageClient } from '@/components/home-page-client'
 import { Movie } from '@/lib/types'
 
 export default async function HomePage() {
+  // Prevent showtimes from expiring by shifting them forward automatically
+  await checkAndShiftShowtimes()
+
   const supabase = await createClient()
   
   let movies: Movie[] = []

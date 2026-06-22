@@ -36,6 +36,8 @@ export const viewport: Viewport = {
   themeColor: '#1a1625',
 }
 
+import { Theme3DProvider } from '@/components/theme-provider-3d'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,9 +46,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
-        <NotificationProvider>
-          {children}
-        </NotificationProvider>
+        <Theme3DProvider>
+          <NotificationProvider>
+            {children}
+          </NotificationProvider>
+        </Theme3DProvider>
         <Toaster />
         <Analytics />
       </body>
